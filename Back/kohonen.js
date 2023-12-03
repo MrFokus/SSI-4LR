@@ -2,27 +2,45 @@
 module.exports = {
     main: function main(){
         const distance = require('euclidean-distance')
-
+        function normalize(){
+            for (let i = 0; i < arrNeuron.length; i++) {
+                let norm = Math.sqrt(arrNeuron[i].valuesNeuron.reduce((sum, x) => sum + x*x, 0));
+                arrNeuron[i].valuesNeuron = arrNeuron[i].valuesNeuron.map(x => x / norm);
+            }
+        }
+        // let inputData = [
+        //     [-1, -6],
+        //     [8, 16],
+        //     [2, -6],
+        //     [2, -6],
+        //     [9, 21],
+        //     [3, -6],
+        //     [0, -7],
+        //     [9, 16],
+        //     [0, -7],
+        //     [-1, -7],
+        //     [1, -6],
+        //     [5, 21],
+        // ];
         let inputData = [
             [-1, -6],
-            [8, 16],
-            [2, -6],
-            [2, -6],
-            [9, 21],
-            [3, -6],
-            [0, -7],
-            [9, 16],
-            [0, -7],
-            [-1, -7],
+            [-2, -3],
+            [-2, -5],
+            [2, 6],
+            [3, 7],
+            [3, 5],
+            [2, 7],
+            [9, 1],
+            [8, 2],
+            [10, 3],
             [1, -6],
-            [5, 21],
-        ];
+            [2, -5],
+        ]
 
-        let clusters_M = 10;
+        let clusters_M = 5;
         let lengthNeurons_N = inputData[0].length;
-        let T = 1
-        let speedLearning = 0.7
-        let deltaSpeedLearning = 0.05
+        let speedLearning = 0.1
+        let deltaSpeedLearning = 0.01
         class Neuron {
             valuesNeuron = [];
             lengthNeurons_N;
@@ -33,7 +51,7 @@ module.exports = {
 
             createRandomNeuron = () => {
                 for (let i = 0; i < this.lengthNeurons_N; i++) {
-                    this.valuesNeuron.push(Math.random());
+                    this.valuesNeuron.push(Math.random() * (10 - -10) + -10);
                 }
             };
         }
@@ -42,9 +60,11 @@ module.exports = {
             arrNeuron.push(new Neuron(lengthNeurons_N));
         }
         console.log(arrNeuron)
-        let step=[]
+        normalize()
+        console.log(arrNeuron)
+        let step=[arrNeuron]
         while (speedLearning > 0) {
-            for (let epoch = 0; epoch < 100; epoch++) {
+            for (let epoch = 0; epoch < 2; epoch++) {
                 let copyArrNeuron = arrNeuron.map(neuron => {
                     let newNeuron = new Neuron(neuron.lengthNeurons_N);
                     newNeuron.valuesNeuron = [...neuron.valuesNeuron];

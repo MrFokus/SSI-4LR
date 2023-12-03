@@ -1,7 +1,5 @@
 <template>
-  <div class="p-2 border border-gray-500 mt-4">
-    <label class="block mb-2 font-bold"> Coba Chart </label>
-
+  <div class="chart">
     <client-only>
       <BarChart :data="chartData" />
     </client-only>
@@ -20,6 +18,7 @@ export default {
     return{
       data:[],
       res:[],
+      step:[]
     }
   },
   methods:{
@@ -32,12 +31,21 @@ export default {
           y:el[1],
         }
       })
-      this.res = data.step[data.step.length-1].map(el=>{
-        return{
-          x:el.valuesNeuron[0],
-          y:el.valuesNeuron[1],
+      this.step = data.step
+      let index= 0
+      let idInterval = setInterval(()=>{
+        if (index === this.step.length-1){
+          clearInterval(idInterval)
         }
-      })
+        this.res = this.step[index].map(el=>{
+          return{
+            x:el.valuesNeuron[0],
+            y:el.valuesNeuron[1],
+          }
+        })
+        index++
+        console.log(this.res, index)
+      },2000)
     }
   },
   mounted() {
@@ -51,7 +59,8 @@ export default {
           data:this.data,
           // this dataset is drawn below
           order: 1,
-          type:'scatter'
+          type:'scatter',
+          backgroundColor:'black',
         }, {
           label: 'Line Dataset',
           data: this.res,
@@ -67,3 +76,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.chart{
+  margin: auto;
+  width: 50vw;
+}
+</style>
