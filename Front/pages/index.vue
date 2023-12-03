@@ -1,7 +1,18 @@
 <template>
   <div class="chart">
+    <div class="container">
+      <div class="input-clusters">
+        <p>Введите количество кластеров</p>
+        <input v-model="clusters" type="number">
+      </div>
+      <div class="input-points">
+        <p>Введите точки</p>
+        <textarea v-model="inputPoints"/>
+      </div>
+      <button @click="getData">Расчитать</button>
+    </div>
     <client-only>
-      <BarChart :data="chartData" />
+      <BarChart class="graph" :data="chartData" />
     </client-only>
   </div>
 </template>
@@ -16,6 +27,8 @@ export default {
   },
   data(){
     return{
+      clusters:3,
+      inputPoints:`-1, -6\n-2, -3\n-2, -5\n2, 6\n3, 7\n3, 5\n2, 7\n9, 1\n8, 2\n10, 3\n1, -6\n2, -5`,
       data:[],
       res:[],
       step:[]
@@ -23,7 +36,7 @@ export default {
   },
   methods:{
     async getData(){
-      let {data} = await this.$axios.get('http://localhost:3001/')
+      let {data} = await this.$axios.post('http://localhost:3001/',{points:this.points,clusters:+this.clusters})
       console.log(data)
       this.data =  data.inputData.map(el=>{
         return{
@@ -48,10 +61,16 @@ export default {
       },2000)
     }
   },
-  mounted() {
-    this.getData()
-  },
+  // mounted() {
+  //   this.getData()
+  //   console.log(this.points)
+  // },
   computed: {
+    points(){
+      return this.inputPoints.trim().split('\n').map(arr=>{
+        return arr.split(',').map(el=>+el)
+      })
+    },
     chartData() {
       return {
         datasets: [{
@@ -79,7 +98,32 @@ export default {
 
 <style scoped>
 .chart{
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding: 50px;
+  display: flex;
   margin: auto;
-  width: 50vw;
+  max-height: 70vh;
+  .container{
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    .input-points{
+     height: 100%;
+      textarea{
+        min-height: 200px;
+      }
+    }
+  }
 }
+</style>
+<style>
+*{
+  transition: none;
+  animation: none;
+}
+canvas,.graph{
+  width: 100%;
+}
+
 </style>

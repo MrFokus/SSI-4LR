@@ -1,6 +1,6 @@
 
 module.exports = {
-    main: function main(){
+    main: function main(inputData,clusters_M){
         const distance = require('euclidean-distance')
         function normalize(){
             for (let i = 0; i < arrNeuron.length; i++) {
@@ -22,25 +22,25 @@ module.exports = {
         //     [1, -6],
         //     [5, 21],
         // ];
-        let inputData = [
-            [-1, -6],
-            [-2, -3],
-            [-2, -5],
-            [2, 6],
-            [3, 7],
-            [3, 5],
-            [2, 7],
-            [9, 1],
-            [8, 2],
-            [10, 3],
-            [1, -6],
-            [2, -5],
-        ]
+        // let inputData = [
+        //     [-1, -6],
+        //     [-2, -3],
+        //     [-2, -5],
+        //     [2, 6],
+        //     [3, 7],
+        //     [3, 5],
+        //     [2, 7],
+        //     [9, 1],
+        //     [8, 2],
+        //     [10, 3],
+        //     [1, -6],
+        //     [2, -5],
+        // ]
 
-        let clusters_M = 5;
+        // let clusters_M = 5;
         let lengthNeurons_N = inputData[0].length;
-        let speedLearning = 0.1
-        let deltaSpeedLearning = 0.01
+        let speedLearning = 0.5
+        let deltaSpeedLearning = 0.15
         class Neuron {
             valuesNeuron = [];
             lengthNeurons_N;
@@ -64,7 +64,7 @@ module.exports = {
         console.log(arrNeuron)
         let step=[arrNeuron]
         while (speedLearning > 0) {
-            for (let epoch = 0; epoch < 2; epoch++) {
+            for (let epoch = 0; epoch < 10000; epoch++) {
                 let copyArrNeuron = arrNeuron.map(neuron => {
                     let newNeuron = new Neuron(neuron.lengthNeurons_N);
                     newNeuron.valuesNeuron = [...neuron.valuesNeuron];
